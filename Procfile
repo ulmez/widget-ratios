@@ -1,1 +1,1 @@
-web: vite
+web: node dist/ratios.js
