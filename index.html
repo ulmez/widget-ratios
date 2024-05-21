@@ -4,14 +4,71 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChartJS Test</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/metropolis-2');
+        @import url('https://fonts.googleapis.com/css?family=DM Serif Text');
+        @import url('https://fonts.googleapis.com/css?family=Noto Sans');
+
+        body {
+            margin: 0;
+            padding: 0;
+        };
+    </style>
 </head>
 <body>
+
+    <!-- Layout 1 -->
     <div>
         <script type="module" src="/src/main.js"></script>
-        <chart-window
+        <chart-ratios
             isin="SE0007100607"
-            color='["#015aa0", "#015aa0", "#015aa0", "#015aa0", "#173c6d"]'
-        ></chart-window>
+            headline-font="DM Serif Text"
+            headline-color="#005AA0"
+            under-headline-font="Noto Sans"
+            under-headline-color="#000000"
+            quarter-year-text-font="Noto Sans"
+            quarter-year-text-color="#000000"
+            switch-button-color="#005AA0"
+            chart-text-font="DM Serif Text"
+            chart-text-color="#000000"
+            chart-value-font="Helvetica Neue"
+            chart-value-color="#000000"
+            info-icon-color="#000000"
+            modal-text-font="DM Serif Text"
+            modal-text-color="#000000"
+            modal-border-color="#005AA0"
+            modal-background-color="#FFFFFF"
+            widget-background-color="#FFFFFF"
+            chart-bar-color='["#015aa0", "#015aa0", "#015aa0", "#015aa0", "#173c6d"]'
+        ></chart-ratios>
     </div>
+
+    <!-- Layout 2 -->
+    <!-- <div>
+        <script type="module" src="/src/main.js"></script>
+        <chart-ratios
+            isin="SE0007100607"
+            headline-font="Metropolis"
+            headline-color="#000000"
+            under-headline-font="Metropolis"
+            under-headline-color="#000000"
+            under-headline-line-height="1.5em"
+            quarter-year-text-font="Metropolis"
+            quarter-year-text-color="#000000"
+            switch-button-color="#000000"
+            chart-text-font="Metropolis"
+            chart-text-color="#000000"
+            chart-text-line-height="1.4em"
+            chart-value-font="Metropolis"
+            chart-value-color="#000000"
+            info-icon-color="#000000"
+            modal-text-font="Metropolis"
+            modal-text-color="#000000"
+            modal-border-color="#D2A578"
+            modal-background-color="#F7F6F3"
+            widget-background-color="#F7F6F3"
+            chart-bar-color='["#D2A578", "#D2A578", "#D2A578", "#D2A578", "#D2A578"]'
+        ></chart-ratios>
+    </div> -->
 </body>
 </html>

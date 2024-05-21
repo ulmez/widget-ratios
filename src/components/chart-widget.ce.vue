@@ -2,19 +2,37 @@
     div(:class="mobileOrDesktopCheck ? 'container-mobile' : 'container-regular'" style="border:0px solid;")
         template(v-for="(item, i) in chartData[quarterOrYear]")
             div(style="border:0px solid;")
-                ChartItem(:canvasId="`canvas${i}`" :data="item" :type="i" :color="color" :infoTexts="infoTexts")
+                ChartItem(
+                    :canvasId="`canvas${i}`"
+                    :chartTextFont="chartTextFont"
+                    :chartTextColor="chartTextColor"
+                    :chartTextLineHeight="chartTextLineHeight"
+                    :chartValueFont="chartValueFont"
+                    :chartValueColor="chartValueColor"
+                    :infoIconColor="infoIconColor"
+                    :data="item"
+                    :type="i"
+                    :chartBarColor="chartBarColor"
+                    :infoTexts="infoTexts"
+                )
 </template>
 
 <script>
 import ChartItem from "./chart-item.ce.vue";
 
 export default {
-    name: "ChartWidget",
+    name: "chart-widget",
     props: {
         chartData: Object,
         quarterOrYear: String,
         mobileOrDesktopCheck: Boolean,
-        color: String,
+        chartBarColor: String,
+        chartTextFont: String,
+        chartTextColor: String,
+        chartTextLineHeight: String,
+        chartValueFont: String,
+        chartValueColor: String,
+        infoIconColor: String,
     },
     components: {
         ChartItem,
@@ -23,16 +41,16 @@ export default {
         return {
             infoTexts: [
                 {
-                    eps: '<h1 style="color:blue;">Info text eps</h1>'
+                    eps: '<h1>Info text eps</h1>'
                 },
                 {
-                    pe: '<h1 style="color:blue;">Info text pe</h1>'
+                    pe: '<h1>Info text pe</h1>'
                 },
                 {
-                    ps: '<h1 style="color:blue;">Info text ps</h1>'
+                    ps: '<h1>Info text ps</h1>'
                 },
                 {
-                    sps: '<h1 style="color:blue;">Info text sps</h1>'
+                    sps: '<h1>Info text sps</h1>'
                 }
             ],
             testus: {
@@ -223,7 +241,7 @@ export default {
 </script>
 
 <style scoped>
-.headline {
+/* .headline {
     font-family: 'DM Serif Text';
     font-size: 20px;
     color: #005AA0;
@@ -233,5 +251,5 @@ export default {
     font-family: 'Helvetica Neue';
     font-size: 12px;
     font-weight: bold;
-}
+} */
 </style>

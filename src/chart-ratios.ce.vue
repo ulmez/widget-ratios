@@ -1,22 +1,35 @@
 <template lang="pug">
-    div(class="widget-container")
-        div(class="headline" style="border:0px solid;") Utveckling
+    div(ref="chartWindowElement" class="widget-container" :style="{ backgroundColor: widgetBackgroundColor }")
+        div(:style="{ fontFamily: headlineFont, color: headlineColor, fontSize: '20px' }" style="border:0px solid;") Utveckling
         div(style="margin-bottom:20px; border:0px solid;")
             table(cellpadding="0" cellspacing="0" width="100%")
                 tr
-                    td(style="width:65%; border:0px solid;") Nyckeltal för de senaste 5 åren.
-                    td(style="position:relative; width:35%; text-align:right; padding-right:35px; border:0px solid;") År / Kvartal
+                    td(:style="{ fontFamily: underHeadlineFont, color: underHeadlineColor, lineHeight: underHeadlineLineHeight, fontSize: '12px' }" style="width:65%; border:0px solid;") Nyckeltal för de senaste 5 åren.
+                    td(:style="{ fontFamily: quarterYearTextFont, color: quarterYearTextColor, fontSize: '12px' }" style="position:relative; width:35%; text-align:right; padding-right:35px; border:0px solid;") År / Kvartal
                         div(style="position:absolute; right:28px; top:-7px; border:0px solid;")
                             div(@click="switchQuarterlyOrYearly()" id="switch-block" style="position:relative; border:0px solid;")
-                                img(v-if="quarterlyOrYearly === 'quarterly'" src="./assets/switch-on.svg" style="position:absolute; height:30px;")
-                                img(v-else src="./assets/switch-off.svg" style="position:absolute; height:30px;")
+                                svg(xmlns="http://www.w3.org/2000/svg" width="2em" height="1em" viewBox="0 0 24 24" style="position:absolute; height:30px;")
+                                    path(v-if="quarterlyOrYearly === 'quarterly'" :fill="switchButtonColor" d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4m0-7c-1.66 0-3 1.34-3 3s1.34 3 3 3s3-1.34 3-3s-1.34-3-3-3")
+                                    path(v-else :fill="switchButtonColor" d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3s3-1.34 3-3s-1.34-3-3-3")
 
-        ChartWidget(v-if="reload && fundamentalData !== null" :chartData="fundamentalData.ratios" :quarterOrYear="quarterlyOrYearly" :mobileOrDesktopCheck="mobileOrDesktopCheck" :color="color")
+        ChartWidget(
+            v-if="reload && fundamentalData !== null"
+            :chartTextFont="chartTextFont"
+            :chartTextColor="chartTextColor"
+            :chartTextLineHeight="chartTextLineHeight"
+            :chartValueFont="chartValueFont"
+            :chartValueColor="chartValueColor"
+            :infoIconColor="infoIconColor"
+            :chartData="fundamentalData.ratios"
+            :quarterOrYear="quarterlyOrYearly"
+            :mobileOrDesktopCheck="mobileOrDesktopCheck"
+            :chartBarColor="chartBarColor"
+        )
 
         //- modal
         div(v-if="showModal")
             div(@click="showModal = false" id="myModal" ref="myModal" class="modal")
-            div(class="modal-content" ref="myContent" style="font-family:'DM Serif Text';")
+            div(class="modal-content" ref="myContent" :style="{ fontFamily: modalTextFont, color: modalTextColor, border: `1px solid ${modalBorderColor}`, backgroundColor: modalBackgroundColor }")
                 div(style="padding:10px;")
                     div(class="close" style="position:relative; border:0px solid;")
                         div(@click="showModal = false" class="close" style="position:absolute; top:-13px; right:-1px; border:0px solid;") &times;
@@ -33,15 +46,50 @@
 <script>
 import { useWidgetStore } from "./store/WidgetStore";
 import { storeToRefs, mapActions } from 'pinia';
-
 import ChartWidget from './components/chart-widget.ce.vue';
-// import './main.css';
 
 export default {
-    name: "App",
+    name: "chart-ratios",
     props: {
         isin: String,
-        color: String
+        headlineFont: String,
+        headlineColor: String,
+        underHeadlineFont: String,
+        underHeadlineColor: String,
+        quarterYearTextFont: String,
+        quarterYearTextColor: String,
+        switchButtonColor: String,
+        chartTextFont: String,
+        chartTextColor: String,
+        chartTextLineHeight: {
+            type: String,
+            default: '1em'
+        },
+        chartValueFont: String,
+        chartValueColor: String,
+        chartBarColor: {
+            type: String,
+            default: '["#000000", "#000000", "#000000", "#000000", "#000000"]'
+        },
+        modalTextFont: String,
+        modalTextColor: String,
+        modalBorderColor: String,
+        modalBackgroundColor: {
+            type: String,
+            default: '#FFFFFF'
+        },
+        infoIconColor: {
+            type: String,
+            default: '#000000'
+        },
+        widgetBackgroundColor: {
+            type: String,
+            default: '#FFFFFF'
+        },
+        underHeadlineLineHeight: {
+            type: String,
+            default: '1em'
+        }
     },
     components: {
         ChartWidget,
@@ -68,6 +116,23 @@ export default {
     },
     methods: {
         ...mapActions(useWidgetStore, ['loadRatios']),
+        visibilityChange() {
+            if(document.hidden){
+                console.log("Browser tab is hidden");
+            } else {
+                console.log("Browser tab is visible");
+
+                const chartWindowElement = this.$refs.chartWindowElement;
+
+                // console.log(chartWindowElement);
+
+                chartWindowElement.style.visibility = "hidden";
+
+                setTimeout(() => {
+                    chartWindowElement.style.visibility = "visible";
+                }, 200);
+            }
+        },
         switchQuarterlyOrYearly() {
             console.log('entered?!...');
 
@@ -108,20 +173,7 @@ export default {
         },
     },
     async mounted() {
-        const head = document.head || document.getElementsByTagName('head')[0];
-        const style = document.createElement('style');
-
-        head.appendChild(style);
-
-        style.appendChild(document.createTextNode(`
-            @import url('https://fonts.googleapis.com/css?family=DM Serif Text');
-            @import url('https://fonts.googleapis.com/css?family=Noto Sans');
-            
-            body {
-                margin: 0;
-                padding: 0;
-            };
-        `));
+        window.addEventListener("visibilitychange", this.visibilityChange);
 
         await this.loadRatios({
             isin: this.isin,//'SE0007100607',
@@ -139,6 +191,7 @@ export default {
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.onResize);
+        window.removeEventListener("visibilitychange", this.visibilityChange);
     },
 }
 </script>
@@ -163,17 +216,6 @@ hr {
     margin-bottom: 10px;
 }
 
-.widget-container {
-    font-family: 'Noto Sans';
-    font-size: 12px;
-}
-
-.headline {
-    font-family: 'DM Serif Text';
-    font-size: 20px;
-    color: #005AA0;
-}
-
 /* modal block *************************** */
 .modal {
     /* display: none; */
@@ -193,8 +235,8 @@ hr {
     z-index: 2;
     left: 0;
     bottom: 0;
+    box-sizing: border-box;
     background-color: #fefefe;
-    border: 1px solid #005AA0;
     width: 100%;
     border-radius: 10px 10px 0 0;
 }
